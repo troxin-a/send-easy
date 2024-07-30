@@ -57,7 +57,7 @@ class Mailing(models.Model):
     started_at = models.DateTimeField(verbose_name="Время и дата", help_text="Введите время и дату первого запуска")
     periodicity = models.CharField(verbose_name="Периодичность", max_length=1, choices=LAUNCH_FREQUENCY, default=ONE_TIME, help_text="Выберите периодичность запуска")
     status = models.CharField(verbose_name="Статус", max_length=1, choices=MAILING_STATUS, default=CREATED, help_text="Выберите статус рассылки")
-    clients = models.ManyToManyField(to=Client, verbose_name="Клиенты", help_text="Выберите клиентов")
+    clients = models.ManyToManyField(to=Client, verbose_name="Клиенты",  help_text="Выберите клиентов")
     text = models.ForeignKey(to=Text, verbose_name="Сообщение", on_delete=models.CASCADE, related_name="mailings", help_text="Выберите сообщение для рассылки")
 
     def __str__(self):
