@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="modal modal-sheet position-static d-block p-4 py-md-5" tabindex="-1" role="dialog" id="modalChoice">
+    <form action="" method="post">
+      {% csrf_token %}
+      <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-3 shadow">
+          <div class="modal-body p-4 text-center">
+            <h5 class="mb-0">Подтверждение</h5>
+
+            {% if object.mailings.all %}
+              <p class="mb-0"><br>Внимание! Эти действия удалят привязанные рассылки:</p>            
+              {% for obj in object.mailings.all %}
+                <p class="mb-0">- <a href="#">{{ obj.name }}</a></p><br>
+              {% endfor %}
+            {% endif %}
+
+            <p class="mb-0">Вы уверены, что хотите удалить сообщение с заголовком<br>"<strong>{{ object.title }}"</strong>?</p>            
+          </div>
+          <div class="modal-footer flex-nowrap p-0">
+            <a class="btn btn-lg btn-primary rounded-bottom-3 fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" href="{% url "sender:text_list" %}">Отмена</a>
+            <button type="submit" class="btn btn-lg btn-danger rounded-bottom-3 fs-6 text-decoration-none col-6 py-3 m-0 rounded-0">Ок</button>            
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

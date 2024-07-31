@@ -21,7 +21,7 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "email",
-        "comment",
+        "get_comment",
     )
     search_fields = (
         "name",
@@ -32,13 +32,17 @@ class ClientAdmin(admin.ModelAdmin):
         MembershipInline,
     ]
 
+    def get_comment(self, obj):
+        if len(obj.comment) >= 100:
+            return obj.comment[:100] + "..."
+        return obj.comment
+
 
 @admin.register(Text)
 class TextAdmin(admin.ModelAdmin):
 
     list_display = (
         "title",
-        "body",
     )
     search_fields = (
         "title",

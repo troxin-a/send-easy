@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="mt-5">Сообщение</h1>
+  <div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="card-title">{{ object.title }}</h5>
+      </div>
+
+      <div>
+        <a href="{% url "sender:text_update" object.pk %}" class="btn btn-primary">Редактировать</a>
+        <a href="{% url "sender:text_list" %}" class="btn btn-primary">Назад</a>
+        <a href="{% url "sender:text_delete" object.pk %}" class="btn btn-outline-danger">Удалить</a>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="card-text">{{ object.body|safe }}</p>
+
+      <br />
+      <h5 class="card-title">Привязанные рассылки</h5>
+      <div class="row">
+        <div class="col">
+          <table class="table table-sm">
+            <tbody class="table-group-divider">
+              {% for obj in object.mailings.all %}
+                <tr>
+                  <td>
+                    <a href="#" class="link-primary"><div>{{ obj.name }}</div></a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

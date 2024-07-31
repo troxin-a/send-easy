@@ -1,3 +1,4 @@
+from django_ckeditor_5.fields import CKEditor5Field
 from django.db import models
 
 
@@ -20,7 +21,7 @@ class Client(models.Model):
 
 class Text(models.Model):
     title = models.CharField(verbose_name="Тема", max_length=150)
-    body = models.TextField(verbose_name="Сообщение")
+    body = CKEditor5Field(verbose_name="Сообщение", **NULLABLE)
 
     def __str__(self):
         return f"{self.title}"

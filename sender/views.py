@@ -8,7 +8,7 @@ from django.views.generic import (
     UpdateView,
 )
 
-from sender.models import Client
+from sender.models import Client, Text
 
 
 def index(request):
@@ -41,3 +41,31 @@ class ClientUpdateView(UpdateView):
 class ClientDeleteView(DeleteView):
     model = Client
     success_url = reverse_lazy("sender:client_list")
+
+
+class TextListView(ListView):
+    model = Text
+    paginate_by = 100
+
+
+class TextDetailView(DetailView):
+    model = Text
+
+
+class TextCreateView(CreateView):
+    model = Text
+    fields = "__all__"
+    success_url = reverse_lazy("sender:text_list")    
+
+
+class TextUpdateView(UpdateView):
+    model = Text
+    fields = "__all__"
+
+    def get_success_url(self):
+        return reverse("sender:text_detail", args=[self.kwargs.get("pk")])
+
+
+class TextDeleteView(DeleteView):
+    model = Text
+    success_url = reverse_lazy("sender:text_list")

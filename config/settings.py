@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_ckeditor_5',
 
     'sender',
 ]
@@ -123,10 +126,128 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / 'static'
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+# Настройки для django-ckeditor-5
+CKEDITOR_5_CUSTOM_CSS = 'django_ckeditor_5/my_style.css'
+CKEDITOR_5_FILE_STORAGE = "sender.utils.CustomStorage"
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': {
+            'items': [
+                'undo',
+                'redo',
+                '|',
+                'showBlocks',
+                'selectAll',
+                '|',
+                'heading',
+                '|',
+                'fontSize',
+                'fontFamily',
+                'fontColor',
+                'fontBackgroundColor',
+                '|',
+                'bold',
+                'italic',
+                'underline',
+                'strikethrough',
+                'subscript',
+                'superscript',
+                'code',
+                '|',
+                'link',
+                'insertTable',
+                'blockQuote',
+                '|',
+                'alignment',
+                '|',
+                'bulletedList',
+                'numberedList',
+                'outdent',
+                'indent',
+                '|',
+                'accessibilityHelp'
+            ],
+            'shouldNotGroupWhenFull': False
+        },
+        'balloonToolbar': ['bold', 'italic', 'underline', '|', 'link', '|', 'bulletedList', 'numberedList'],
+        'blockToolbar': [
+            'fontSize',
+            'fontColor',
+            'fontBackgroundColor',
+            '|',
+            'bold',
+            'italic',
+            '|',
+            'link',
+            'insertTable',
+            '|',
+            'bulletedList',
+            'numberedList',
+            'outdent',
+            'indent'
+        ],
+        'fontFamily': {
+            'supportAllValues': True
+        },
+        'fontSize': {
+            'options': [10, 12, 14, 'default', 18, 20, 22],
+            'supportAllValues': True
+        },
+        'htmlSupport': {
+            'allow': [
+                {
+                    'name': '/^.*$/',
+                    'styles': True,
+                    'attributes': True,
+                    'classes': True
+                }
+            ]
+	    },
+        'image': {
+            'toolbar': [
+                'toggleImageCaption',
+                'imageTextAlternative',
+                '|',
+                'imageStyle:inline',
+                'imageStyle:wrapText',
+                'imageStyle:breakText',
+                '|',
+                'resizeImage'
+            ],
+        },
+        'link': {
+            'addTargetToExternalLinks': True,
+            'defaultProtocol': 'https://',
+            'decorators': {
+                'toggleDownloadable': {
+                    'mode': 'manual',
+                    'label': 'Downloadable',
+                    'attributes': {
+                        'download': 'file'
+                    }
+                }
+            }
+        },
+        'placeholder': 'Type or paste your content here!',
+        'table': {
+            'contentToolbar': ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
+        },
+        'language': 'ru',
+    },
+}

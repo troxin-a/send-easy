@@ -9,8 +9,8 @@
       </div>
 
       <div>
-        <a href="{% url "sender:client_update" object.pk %}" class="btn btn-outline-warning">Редактировать</a>
-        <a href="{% url "sender:client_list" %}" class="btn btn-outline-primary">Назад</a>
+        <a href="{% url "sender:client_update" object.pk %}" class="btn btn-primary">Редактировать</a>
+        <a href="{% url "sender:client_list" %}" class="btn btn-primary">Назад</a>
         <a href="{% url "sender:client_delete" object.pk %}" class="btn btn-outline-danger">Удалить</a>
       </div>
     </div>
@@ -41,7 +41,7 @@
                     <a href="#" class="link-primary"><div>{{ obj.name }}</div></a>
                   </td>
                   <td>
-                    <a href="#" class="link-primary"><div>{{ obj.text }}</div></a>
+                    <a href="{% url "sender:text_detail" obj.text.pk %}" class="link-primary"><div>{{ obj.text }}</div></a>
                   </td>
                 </tr>
               {% endfor %}
