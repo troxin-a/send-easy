@@ -19,7 +19,7 @@
             <p class="mb-0">Вы уверены, что хотите удалить сообщение с заголовком<br>"<strong>{{ object.title }}"</strong>?</p>            
           </div>
           <div class="modal-footer flex-nowrap p-0">
-            <a class="btn btn-lg btn-primary rounded-bottom-3 fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" href="{% url "sender:text_list" %}">Отмена</a>
+            <a class="btn btn-lg btn-primary rounded-bottom-3 fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" href="{% url "sender:text_detail" object.pk %}">Отмена</a>
             <button type="submit" class="btn btn-lg btn-danger rounded-bottom-3 fs-6 text-decoration-none col-6 py-3 m-0 rounded-0">Ок</button>            
           </div>
         </div>

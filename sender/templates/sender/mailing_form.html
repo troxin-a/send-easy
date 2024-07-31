@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-5">
+      <h1 class="m-5 text-center">{% if object %}Редактироние рассылки{% else %}Новая рассылка{% endif %}</h1>
+      <form action="" method="post">
+        {% csrf_token %}
+
+        
+        {% comment %} <div class="mb-3">
+          <label for="id-name" class="form-label">Название</label>
+          <input type="text" class="form-control" id="id-name" placeholder="Наименование рассылки" name="name"
+          value="{{ object.name }}" />
+        </div>
+        <div class="mb-3">
+          <label for="id-started_at" class="form-label">Дата и время первого запуска</label>
+          <input type="datetime-local" class="form-control" id="id-started_at" placeholder="ivanov@email.ru" name="started_at"
+          value="{{ object.started_at }}" />
+        </div>
+
+        <div class="mb-3">
+          <label for="id-periodicity" class="form-label">Периодичность</label>
+          <select class="form-select" id="id-periodicity" aria-label="Default select example" name="periodicity">
+            <option selected>Open this select menu</option>
+            {% for period in object.periodicity %}
+            <option value="{{ object.period }}">{{ object.get_period_display }}</option>
+            {% endfor %}
+          </select>
+        </div> {% endcomment %}
+
+        {{form.as_p}}
+
+        <button type="submit" class="btn btn-primary form-control mb-3">{% if object %}Сохранить{% else %}Создать{% endif %}</button>
+        <a class="btn btn-secondary form-control"
+        href="
+          {% if object %}
+            {% url "sender:mailing_detail" object.pk %}
+          {% else %}
+            {% url "sender:mailing_list" %}
+          {% endif %}
+        ">Отмена</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

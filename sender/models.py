@@ -46,11 +46,11 @@ class Mailing(models.Model):
 
     CREATED = "C"
     RUNING = "R"
-    COMPLETED = "F"
+    STOPPED = "S"
     MAILING_STATUS = {
         CREATED: "Создана",
         RUNING: "Запущена",
-        COMPLETED: "Завершена",
+        STOPPED: "Завершена",
     }
 
 
@@ -70,16 +70,17 @@ class Mailing(models.Model):
         ordering = ("pk",)
 
 
-# class Attempt(models.Model):
-#     mailing = models.ForeignKey(to=Mailing, verbose_name="Рассылка", on_delete=models.DO_NOTHING)
-#     started = models.DateTimeField(verbose_name="Дата и время запуска", auto_now=True)
-#     status = models.CharField(verbose_name="Статус", max_length="")
-#     response = ...
+class Attempt(models.Model):
+    mailing = models.ForeignKey(to=Mailing, verbose_name="Рассылка", on_delete=models.DO_NOTHING, editable=False)
+    started = models.DateTimeField(verbose_name="Дата и время запуска", auto_now=True, editable=False)
+    status = models.BooleanField(verbose_name="Статус", default=True, editable=False)
+    response_code = models.SmallIntegerField(verbose_name="Код ответа", editable=False)
+    response_msg = models.CharField(verbose_name="Текст ответа сервера", max_length=250, editable=False, **NULLABLE)
 
-#     # def __str__(self):
-#     #     return f"{self.started} | {self.mailing} | {self.status} | {self.response}"
+    def __str__(self):
+        return f"{self.started} | {self.mailing} | {self.status}"
 
-#     class Meta:
-#         verbose_name = "попытку"
-#         verbose_name_plural = "попытки"
-#         ordering = ("pk",)
+    class Meta:
+        verbose_name = "попытку"
+        verbose_name_plural = "попытки"
+        ordering = ("pk",)

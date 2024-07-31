@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from sender.models import Client, Mailing, Text
+from sender.models import Attempt, Client, Mailing, Text
 
 
 class MembershipInline(admin.TabularInline):
@@ -72,4 +72,24 @@ class MailingAdmin(admin.ModelAdmin):
     list_filter = (
         "periodicity",
         "status",
+    )
+
+
+@admin.register(Attempt)
+class AttemptAdmin(admin.ModelAdmin):
+    list_display = (
+        "mailing",
+        "started",
+        "status",
+        "response_code",
+        "response_msg",
+    )
+    search_fields = (
+        "mailing.name",
+        "response_msg",
+    )
+    list_filter = (
+        "mailing",
+        "status",
+        "response_code",
     )

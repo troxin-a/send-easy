@@ -16,7 +16,14 @@
         <div class="row-cols-2">
           <div class="d-flex gap-3">
             <button type="submit" class="btn btn-primary form-control">{% if object %}Сохранить{% else %}Создать{% endif %}</button>
-            <a class="btn btn-secondary form-control" href="{% url "sender:text_detail" object.pk %}">Отмена</a>
+            <a class="btn btn-secondary form-control"
+            href="
+              {% if object %}
+                {% url "sender:mailing_detail" object.pk %}
+              {% else %}
+                {% url "sender:mailing_list" %}
+              {% endif %}
+            ">Отмена</a>
           </div>        
         </div>        
       </form>
