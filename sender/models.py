@@ -21,7 +21,7 @@ class Client(models.Model):
 
 class Text(models.Model):
     title = models.CharField(verbose_name="Тема", max_length=150)
-    body = CKEditor5Field(verbose_name="Сообщение", **NULLABLE)
+    body = models.TextField(verbose_name="Сообщение", **NULLABLE)
 
     def __str__(self):
         return f"{self.title}"
@@ -55,7 +55,8 @@ class Mailing(models.Model):
 
 
     name = models.CharField(verbose_name="Наименование", max_length=150, help_text="Введите наименование рассылки", **NULLABLE)
-    started_at = models.DateTimeField(verbose_name="Время и дата", help_text="Введите время и дату первого запуска")
+    start_datetime = models.DateTimeField(verbose_name="Время и дата старта", help_text="Введите время и дату старта")
+    end_datetime = models.DateTimeField(verbose_name="Время и дата окончания", help_text="Введите время и дату окончания (не обязательно)", **NULLABLE)
     periodicity = models.CharField(verbose_name="Периодичность", max_length=1, choices=LAUNCH_FREQUENCY, default=ONE_TIME, help_text="Выберите периодичность запуска")
     status = models.CharField(verbose_name="Статус", max_length=1, choices=MAILING_STATUS, default=CREATED, help_text="Выберите статус рассылки")
     clients = models.ManyToManyField(to=Client, verbose_name="Клиенты",  help_text="Выберите клиентов")
@@ -71,7 +72,7 @@ class Mailing(models.Model):
 
 
 class Attempt(models.Model):
-    mailing = models.ForeignKey(to=Mailing, verbose_name="Рассылка", on_delete=models.DO_NOTHING, editable=False)
+    mailing = models.ForeignKey(to=Mailing, verbose_name="Рассылка", related_name="attempts", on_delete=models.DO_NOTHING, editable=False)
     started = models.DateTimeField(verbose_name="Дата и время запуска", auto_now=True, editable=False)
     status = models.BooleanField(verbose_name="Статус", default=True, editable=False)
     response_code = models.SmallIntegerField(verbose_name="Код ответа", editable=False)
@@ -83,4 +84,4 @@ class Attempt(models.Model):
     class Meta:
         verbose_name = "попытку"
         verbose_name_plural = "попытки"
-        ordering = ("pk",)
+        ordering = ("-started",)

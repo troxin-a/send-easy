@@ -38,7 +38,7 @@
               {% for obj in object.mailing_set.all %}
                 <tr>
                   <td>
-                    <a href="#" class="link-primary"><div>{{ obj.name }}</div></a>
+                    <a href="{% url "sender:mailing_detail" obj.pk %}" class="link-primary"><div>{{ obj.name }}</div></a>
                   </td>
                   <td>
                     <a href="{% url "sender:text_detail" obj.text.pk %}" class="link-primary"><div>{{ obj.text }}</div></a>

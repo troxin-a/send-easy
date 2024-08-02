@@ -54,7 +54,8 @@ class TextAdmin(admin.ModelAdmin):
 class MailingAdmin(admin.ModelAdmin):
     list_display = (
         "name",
-        "started_at",
+        "start_datetime",
+        "end_datetime",
         "periodicity",
         "status",
         "text",
