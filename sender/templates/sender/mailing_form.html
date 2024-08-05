@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-5">
+      <h1 class="m-5 text-center">{% if object %}Редактироние рассылки{% else %}Новая рассылка{% endif %}</h1>
+      <form action="" method="post">
+        {% csrf_token %}
+
+        
+        {% comment %} <div class="mb-3">
+          <label for="id-name" class="form-label">Название</label>
+          <input type="text" class="form-control" id="id-name" placeholder="Наименование рассылки" name="name"
+          value="{{ object.name }}" />
+        </div>
+        <div class="mb-3">
+          <label for="id-start_datetime" class="form-label">Дата и время старта</label>
+          <input type="datetime-local" class="form-control" id="id-start_datetime" name="start_datetime"
+          value="2018-06-12T19:30" />
+        </div>
+
+        <div class="mb-3">
+          <label for="id-end_datetime" class="form-label">Дата и время окончания</label>
+          <input type="datetime-local" class="form-control" id="id-end_datetime" name="end_datetime"
+          value="{{ object.end_datetime }}" />
+        </div>
+
+        <div class="mb-3">
+          <label for="id-periodicity" class="form-label">Периодичность</label>
+          <select name="periodicity" class="form-select" id="id-periodicity" onchange="submitForm()">
+            {% for periodicity in object.LAUNCH_FREQUENCY.items %}
+              <option value="{{ periodicity.0 }}" {% if object.periodicity == periodicity.0 %}selected{% endif %}>{{ periodicity.1 }}</option>
+            {% endfor %}
+          </select>
+        </div> {% endcomment %}
+
+        {{form.as_p}}
+
+        <button type="submit" class="btn btn-primary form-control mb-3">{% if object %}Сохранить{% else %}Создать{% endif %}</button>
+        <a class="btn btn-secondary form-control"
+        href="
+          {% if object %}
+            {% url "sender:mailing_detail" object.pk %}
+          {% else %}
+            {% url "sender:mailing_list" %}
+          {% endif %}
+        ">Отмена</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

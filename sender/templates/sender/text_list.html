@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="mt-5">Сообщения</h1>
+  <p class="lead">Для того, чтобы сообщение было отправлено, необходимо его добавить в рассылку</p>
+  <div class="mb-3">
+    <a class="btn btn-primary" href="{% url "sender:text_create" %}">Добавить сообщение</a>
+  </div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Тема</th>
+        <th scope="col">Текст сообщения</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in page_obj %}
+        <tr>
+          <td>
+            <div class="d-flex position-relative">
+              {{ object.title }}<a href="{% url 'sender:text_detail' object.pk %}" class="stretched-link"></a>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex position-relative">
+              {{ object.body|striptags|truncatechars:100 }}<a href="{% url 'sender:text_detail' object.pk %}" class="stretched-link"></a>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <nav>
+    <ul class="pagination">
+      <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+        <a class="page-link" href="{% if page_obj.has_previous %}
+        {% url 'sender:text_list' %}?page={{ page_obj.previous_page_number }}{% endif %}">
+        Назад</a>
+      </li>
+
+      {% for page in page_obj.paginator.page_range %}
+        {% if page <= page_obj.number|add:2 and page >= page_obj.number|add:-2 %}
+          <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+            <a class="page-link" href="{% url 'sender:text_list' %}?page={{ page }}">{{ page }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+        <a class="page-link" href="
+        {% if page_obj.has_next %}{% url 'sender:text_list' %}?page={{ page_obj.next_page_number }}{% endif %}">
+        Вперед</a>
+      </li>
+    </ul>
+  </nav>
+{% endblock %}

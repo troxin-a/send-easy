@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="mt-5">Информация о клиенте</h1>
+  <div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="card-title">{{ object.name }}</h5>
+      </div>
+
+      <div>
+        <a href="{% url "sender:client_update" object.pk %}" class="btn btn-primary">Редактировать</a>
+        <a href="{% url "sender:client_list" %}" class="btn btn-primary">Назад</a>
+        <a href="{% url "sender:client_delete" object.pk %}" class="btn btn-outline-danger">Удалить</a>
+      </div>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Email</h5>
+      <p class="card-text">{{ object.email }}</p>
+
+      <br />
+      <h5 class="card-title">Комментарий</h5>
+      <p class="card-text">{{ object.comment }}</p>
+
+      <br />
+      <h5 class="card-title">Группы рассылок</h5>
+
+      <div class="row">
+        <div class="col-4">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">Рассылка</th>
+                <th scope="col">Сообщение</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+              {% for obj in object.mailing_set.all %}
+                <tr>
+                  <td>
+                    <a href="{% url "sender:mailing_detail" obj.pk %}" class="link-primary"><div>{{ obj.name }}</div></a>
+                  </td>
+                  <td>
+                    <a href="{% url "sender:text_detail" obj.text.pk %}" class="link-primary"><div>{{ obj.text }}</div></a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
