@@ -15,6 +15,7 @@ pytz = "^2024.1"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.26.0"
+django-debug-toolbar = "^4.4.6"
 
 [build-system]
 requires = ["poetry-core"]

@@ -23,7 +23,7 @@
           </td>
           <td>
             <div class="d-flex position-relative">
-              {{ object.body|truncatechars:100 }}<a href="{% url 'sender:text_detail' object.pk %}" class="stretched-link"></a>
+              {{ object.body|striptags|truncatechars:100 }}<a href="{% url 'sender:text_detail' object.pk %}" class="stretched-link"></a>
             </div>
           </td>
         </tr>

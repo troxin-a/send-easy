@@ -1,5 +1,3 @@
-from django.forms import BaseModelForm
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -20,7 +18,7 @@ def index(request):
 
 class ClientListView(ListView):
     model = Client
-    paginate_by = 100
+    paginate_by = 50
 
 
 class ClientDetailView(DetailView):
@@ -48,7 +46,7 @@ class ClientDeleteView(DeleteView):
 
 class TextListView(ListView):
     model = Text
-    paginate_by = 100
+    paginate_by = 50
 
 
 class TextDetailView(DetailView):
@@ -76,11 +74,14 @@ class TextDeleteView(DeleteView):
 
 class MailingListView(ListView):
     model = Mailing
-    paginate_by = 100
+    paginate_by = 50
 
 
 class MailingDetailView(DetailView):
     model = Mailing
+
+    def get_queryset(self):        
+        return Mailing.objects.all().select_related("text")
 
     def post(self, request, *args, **kwargs):
         """Изменение рассылки при onchange"""

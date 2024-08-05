@@ -11,7 +11,16 @@
       <h1 class="m-5 text-center">{% if object %}Редактироние сообщения{% else %}Новое сообщение{% endif %}</h1>
       <form action="" method="post">
         {% csrf_token %}        
-        {{ form.as_p }}
+        {% comment %} <div class="mb-3">
+          <label for="id-title" class="form-label">Заголовок</label>
+          <input type="text" class="form-control" id="id-title" placeholder="Тема письма" name="title"
+          value="{{ object.title }}" />
+        </div>
+        <div class="mb-3">
+          <label for="id-body" class="form-label">Сообщение</label>
+          <textarea class="form-control" id="id-body" rows="5" name="body">{{ object.body }}</textarea>
+        </div> {% endcomment %}
+        {{form.as_p}}
 
         <div class="row-cols-2">
           <div class="d-flex gap-3">

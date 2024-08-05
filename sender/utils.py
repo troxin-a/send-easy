@@ -1,22 +1,23 @@
-import os
+# import os
 import smtplib
+from django.utils.html import strip_tags
 import pytz
 import calendar
 from datetime import datetime, timedelta
-from urllib.parse import urljoin
+# from urllib.parse import urljoin
 
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-from django.core.mail import EmailMessage
+# from django.core.files.storage import FileSystemStorage
+from django.core.mail import EmailMultiAlternatives
 
 from sender.models import Attempt, Mailing
 
 
-class CustomStorage(FileSystemStorage):
-    """Custom storage for django_ckeditor_5 images."""
+# class CustomStorage(FileSystemStorage):
+#     """Custom storage for django_ckeditor_5 images."""
 
-    location = os.path.join(settings.MEDIA_ROOT, "django_ckeditor_5")
-    base_url = urljoin(settings.MEDIA_URL, "django_ckeditor_5/")
+#     location = os.path.join(settings.MEDIA_ROOT, "django_ckeditor_5")
+#     base_url = urljoin(settings.MEDIA_URL, "django_ckeditor_5/")
 
 
 class SendMailing:
@@ -117,11 +118,17 @@ class SendMailing:
 
     def execute(self):
         # Формирование письма
-        email = EmailMessage(
+
+
+        html_content = self.mailing.text.body
+        text_content = strip_tags(self.mailing.text.body)
+        email = EmailMultiAlternatives(
             subject=self.mailing.text.title,
-            body=self.mailing.text.body,
-            to=[client.email for client in self.mailing.clients.all()],
+            body=text_content,
+            to=[client.email for client in self.mailing.clients.all()]
         )
+        email.attach_alternative(html_content, "text/html")
+
 
         # Отправка
         response_code, response_msg, status = None, None, None

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "debug_toolbar",
 
     'django_ckeditor_5',
 
@@ -52,7 +53,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
+
+
 
 ROOT_URLCONF = 'config.urls'
 
@@ -124,7 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
+# STATIC_ROOT = (BASE_DIR / 'static',)
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
@@ -151,21 +155,21 @@ SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
 
 
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
+
 
 
 # Настройки для django-ckeditor-5
 CKEDITOR_5_CUSTOM_CSS = 'django_ckeditor_5/my_style.css'
-CKEDITOR_5_FILE_STORAGE = "sender.utils.CustomStorage"
+# CKEDITOR_5_FILE_STORAGE = "sender.utils.CustomStorage"
 CKEDITOR_5_CONFIGS = {
     'default': {
         'toolbar': {
             'items': [
-                'undo',
-                'redo',
-                '|',
-                'showBlocks',
-                'selectAll',
-                '|',
                 'heading',
                 '|',
                 'fontSize',
@@ -191,8 +195,6 @@ CKEDITOR_5_CONFIGS = {
                 'numberedList',
                 'outdent',
                 'indent',
-                '|',
-                'accessibilityHelp'
             ],
             'shouldNotGroupWhenFull': False
         },
@@ -230,18 +232,6 @@ CKEDITOR_5_CONFIGS = {
                 }
             ]
 	    },
-        'image': {
-            'toolbar': [
-                'toggleImageCaption',
-                'imageTextAlternative',
-                '|',
-                'imageStyle:inline',
-                'imageStyle:wrapText',
-                'imageStyle:breakText',
-                '|',
-                'resizeImage'
-            ],
-        },
         'link': {
             'addTargetToExternalLinks': True,
             'defaultProtocol': 'https://',

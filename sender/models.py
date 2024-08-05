@@ -21,7 +21,7 @@ class Client(models.Model):
 
 class Text(models.Model):
     title = models.CharField(verbose_name="Тема", max_length=150)
-    body = models.TextField(verbose_name="Сообщение", **NULLABLE)
+    body = CKEditor5Field(verbose_name="Сообщение", **NULLABLE)
 
     def __str__(self):
         return f"{self.title}"
@@ -72,7 +72,7 @@ class Mailing(models.Model):
 
 
 class Attempt(models.Model):
-    mailing = models.ForeignKey(to=Mailing, verbose_name="Рассылка", related_name="attempts", on_delete=models.DO_NOTHING, editable=False)
+    mailing = models.ForeignKey(to=Mailing, verbose_name="Рассылка", related_name="attempts", on_delete=models.CASCADE, editable=False)
     started = models.DateTimeField(verbose_name="Дата и время запуска", auto_now=True, editable=False)
     status = models.BooleanField(verbose_name="Статус", default=True, editable=False)
     response_code = models.SmallIntegerField(verbose_name="Код ответа", editable=False)
