@@ -37,21 +37,21 @@ class Mailing(models.Model):
     DAY = "D"
     WEEK = "W"
     MONTH = "M"
-    LAUNCH_FREQUENCY = {
-        ONE_TIME: "Одноразовая",
-        DAY: "Раз в день",
-        WEEK: "Раз в неделю",
-        MONTH: "Раз в месяц",
-    }
+    LAUNCH_FREQUENCY = [
+        (ONE_TIME, "Одноразовая"),
+        (DAY, "Раз в день"),
+        (WEEK, "Раз в неделю"),
+        (MONTH, "Раз в месяц"),
+    ]
 
     CREATED = "C"
     RUNING = "R"
     STOPPED = "S"
-    MAILING_STATUS = {
-        CREATED: "Создана",
-        RUNING: "Запущена",
-        STOPPED: "Завершена",
-    }
+    MAILING_STATUS = [
+        (CREATED, "Создана"),
+        (RUNING, "Запущена"),
+        (STOPPED, "Завершена"),
+    ]
 
 
     name = models.CharField(verbose_name="Наименование", max_length=150, help_text="Введите наименование рассылки", **NULLABLE)
