@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+      <div class="card">
+        <form action="" method="post">
+          <div class="card-header text-center"><h3>{{ title }}</h3></div>
+          <div class="card-body">            
+            {% csrf_token %}
+            {{ form.as_p }}            
+            <button type="submit" class="btn btn-primary form-control">{{ button }}</button>
+            {% if change_pass %}
+            <a class="btn btn-secondary form-control mt-3" href="{% url "users:password_change" %}">{{ change_pass }}</a>
+            {% endif %}
+          </div>
+          {% if forget_pass %}
+          <div class="card-footer">
+            <a href="{% url "users:password_reset" %}">Забыли пароль?</a>
+          </div>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

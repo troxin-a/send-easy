@@ -56,14 +56,17 @@
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             {% if not user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link {% if '/users/' in request.path %}active{% endif %}" href="{% url 'users:login' %}">Вход</a>
+                <a class="nav-link {% if '/users/login/' in request.path %}active{% endif %}" href="{% url 'users:login' %}">Вход</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% if '/texts/' in request.path %}active{% endif %}" href="{% url 'sender:text_list' %}">Регистрация</a>
+                <a class="nav-link {% if '/users/register/' in request.path %}active{% endif %}" href="{% url 'users:register' %}">Регистрация</a>
               </li>
             {% else %}
               <li class="nav-item">
-                <a class="nav-link {% if '/users/' in request.path %}active{% endif %}" href="{% url 'users:logout' %}">Выход</a>
+                <a class="nav-link {% if '/users/profile/' in request.path %}active{% endif %}" href="{% url 'users:profile' %}">Профиль</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:logout' %}">Выход</a>
               </li>
             {% endif %}
           </ul>
