@@ -11,3 +11,11 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    class Meta:
+        verbose_name = "пользователя"
+        verbose_name_plural = "пользователи"
+        ordering = ("-pk",)
+        permissions = {
+            ("block_user", "Может блокировать пользователя"),
+        }

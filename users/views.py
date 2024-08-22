@@ -1,6 +1,13 @@
 from secrets import token_hex
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+)
+from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMessage
+from django.db import transaction
+from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.views import (
@@ -12,8 +19,9 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetCompleteView,
 )
-from django.views.generic import UpdateView, CreateView
+from django.views.generic import DetailView, ListView, UpdateView, CreateView
 
+from sender.models import Mailing
 from users.forms import (
     CustomAuthenticationForm,
     CustomPasswordChangeForm,
@@ -165,3 +173,53 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
             "link": reverse_lazy("users:login"),
         },
     }
+
+
+class UserListView(UserPassesTestMixin, ListView):
+    """Список пользователей сервиса. Виден только модератору и админу"""
+
+    paginate_by = 50
+
+    def test_func(self):
+        user = self.request.user
+        return user.has_perm("users.view_user") or user.is_superuser
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+        if self.request.user.is_superuser:
+            return queryset
+        return queryset.filter(is_superuser=False)
+
+
+@permission_required("users.block_user", PermissionDenied)
+def change_user_activity(request, pk):
+    """
+    Изменение статуса пользователя.
+    Во время блокировки останавливаются все его рассылки
+    """
+
+    user = User.objects.get(pk=pk)
+
+    # Админа и персонал деактивировать нельзя (только из админки)
+    if user.is_superuser or user.is_staff:
+        raise PermissionDenied
+
+    if user.is_active:
+        # Блокировка
+        user.is_active = False
+
+        # Остановка всех рассылок
+        update_list = []
+        for mailing in user.mailings.exclude(status=Mailing.STOPPED):
+            mailing.status = mailing.STOPPED
+            update_list.append(mailing)
+        # Сохранение всех объектов одной транзакцией
+        with transaction.atomic():
+            for record in update_list:
+                record.save(update_fields=["status"])
+    else:
+        # Активация
+        user.is_active = True
+    user.save(update_fields=("is_active",))
+
+    return redirect(reverse_lazy("users:user_list"))

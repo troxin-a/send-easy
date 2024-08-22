@@ -5,9 +5,11 @@
   <p class="lead">
     Чтобы удержать текущих клиентов, часто используют вспомогательные, или «прогревающие», рассылки для информирования и привлечения клиентов.
   </p>
+  {% if not perms.users.block_user and not perms.sender.disable_mailing %}
   <div class="mb-3">
     <a class="btn btn-primary" href="{% url "sender:client_create" %}">Добавить клиента</a>
   </div>  
+  {% endif %}
   <table class="table table-hover">
     <thead>
       <tr>

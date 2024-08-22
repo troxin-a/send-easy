@@ -9,9 +9,11 @@
       </div>
 
       <div>
-        <a href="{% url "sender:text_update" object.pk %}" class="btn btn-primary">Редактировать</a>
         <a href="{% url "sender:text_list" %}" class="btn btn-primary">Назад</a>
+        {% if object.owner == user or user.is_superuser %}
+        <a href="{% url "sender:text_update" object.pk %}" class="btn btn-primary">Редактировать</a>
         <a href="{% url "sender:text_delete" object.pk %}" class="btn btn-outline-danger">Удалить</a>
+        {% endif %}
       </div>
     </div>
     <div class="card-body">
