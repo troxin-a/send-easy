@@ -1,5 +1,5 @@
 from secrets import token_hex
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     UserPassesTestMixin,
@@ -7,7 +7,6 @@ from django.contrib.auth.mixins import (
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMessage
 from django.db import transaction
-from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.views import (
@@ -19,7 +18,7 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetCompleteView,
 )
-from django.views.generic import DetailView, ListView, UpdateView, CreateView
+from django.views.generic import ListView, UpdateView, CreateView
 
 from sender.models import Mailing
 from users.forms import (

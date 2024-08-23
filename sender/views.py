@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import (
     UserPassesTestMixin,
 )
 from django.core.exceptions import PermissionDenied
+from django.forms import ValidationError
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -15,13 +16,27 @@ from django.views.generic import (
     UpdateView,
 )
 
+from blog.models import Article
 from sender.forms import ClientModelForm, MailingModelForm, TextModelForm
 from sender.models import Attempt, Client, Text, Mailing
 
 
 def index(request):
     """Главная страница"""
-    return render(request, "sender/index.html")
+
+    mailings = Mailing.objects.all()
+    mailings_active = mailings.exclude(status=Mailing.STOPPED)
+    clients = Client.objects.all().values('email').distinct()
+    articles = Article.objects.order_by("?")[:3]
+
+    context = {
+        "mailings_count": mailings.count(),
+        "mailings_count_active": mailings_active.count(),
+        "clients_count": clients.count(),
+        "articles": articles,
+    }
+
+    return render(request, "sender/index.html", context)
 
 
 class ViewAccessMixin:
@@ -49,7 +64,7 @@ class ModeratorPassesTestMixin(UserPassesTestMixin):
     """Запрещает просмотр модераторам"""
 
     def test_func(self):
-        return not self.request.user.has_perm("users.block_user")
+        return not self.request.user.is_staff
 
 
 class CreatePermissionMixin:
@@ -94,9 +109,14 @@ class ClientCreateView(LoginRequiredMixin, CreatePermissionMixin, CreateView):
     success_url = reverse_lazy("sender:client_list")
 
     def form_valid(self, form):
+        user = self.request.user
         if form.is_valid:
-            obj = form.save()
-            obj.owner = self.request.user
+            obj = form.save(commit=False)
+            if Client.objects.filter(owner=user).filter(email=obj.email).exists():
+                form.add_error("email", ValidationError("Клиент с такой почтой у Вас уже есть"))
+                return self.form_invalid(form)
+            obj.owner = user
+            obj.save()
 
         return super().form_valid(form)
 

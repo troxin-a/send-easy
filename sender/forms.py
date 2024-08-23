@@ -15,6 +15,9 @@ class FormStyleMixin:
                 field.widget = forms.HiddenInput()
                 # field.required = False
                 continue
+            if isinstance(field, forms.fields.BooleanField):
+                field.widget.attrs.update({"class": "form-check"})
+                continue
             field.widget.attrs.update({"class": "form-control"})
 
 

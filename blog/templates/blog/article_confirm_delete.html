@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block content %}
+  <div class="container">
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <h2 class="display-5">Удалить статью "{{ object.title }}"?</h2>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Ок</button>
+              <a class="btn btn-primary" href="{% url "blog:list" %}">Отмена</a>
+            </form>
+        </div>
+    </div>
+  </div>
+{% endblock %}
