@@ -19,20 +19,19 @@ from django.views.generic import (
 from blog.models import Article
 from sender.forms import ClientModelForm, MailingModelForm, TextModelForm
 from sender.models import Attempt, Client, Text, Mailing
+from sender.services import get_statistic_from_cache
 
 
 def index(request):
     """Главная страница"""
 
-    mailings = Mailing.objects.all()
-    mailings_active = mailings.exclude(status=Mailing.STOPPED)
-    clients = Client.objects.all().values('email').distinct()
+    statistic = get_statistic_from_cache()
     articles = Article.objects.order_by("?")[:3]
 
     context = {
-        "mailings_count": mailings.count(),
-        "mailings_count_active": mailings_active.count(),
-        "clients_count": clients.count(),
+        "mailings_count": statistic.get("mailings_count"),
+        "mailings_count_active": statistic.get("mailings_active_count"),
+        "clients_count": statistic.get("clients_count"),
         "articles": articles,
     }
 
