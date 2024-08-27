@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block content %}
+  <div class="row mt-5">
+    <h1>{{ title }}</h1>
+  </div>
+  <div class="m-2">
+    <a class="btn btn-primary" href="{% url 'blog:create' %}">Добавить статью</a>
+  </div>
+
+  <div class="row mb-2">
+    {% for object in page_obj %}
+      <div class="col-md-12">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+          <div class="col p-4 d-flex flex-column position-static">
+            <h3 class="mb-0">{{ object.title }}</h3>
+            {% if object.is_published %}
+              <div class="mb-1 text-body-secondary">{{ object.public_date }}</div>
+            {% else %}
+              <div class="mb-1 text-bg-warning">Не опубликовано</div>
+            {% endif %}                
+            <p class="card-text mb-auto">{{ object.content|truncatechars:300 }}</p>
+            <div class="mb-1 text-body-secondary">Просмотров: {{ object.views_count }}</div>
+            <a href="{% url 'blog:detail' object.pk %}" class="icon-link gap-1 icon-link-hover stretched-link">Продолжить чтение</a>
+          </div>
+          <div class="col-auto d-none d-lg-block">
+            {% if object.preview %}
+              <img height="250" src="{{ object.preview|media_filter }}" class="card-img-top" alt="{{ object.title }}" />
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if page_obj %}
+  <nav>
+    <ul class="pagination">
+      <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+        <a class="page-link" href="{% if page_obj.has_previous %}
+        {% url 'sender:client_list' %}?page={{ page_obj.previous_page_number }}{% endif %}">
+        Назад</a>
+      </li>
+
+      {% for page in page_obj.paginator.page_range %}
+        {% if page <= page_obj.number|add:2 and page >= page_obj.number|add:-2 %}
+          <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+            <a class="page-link" href="{% url 'sender:client_list' %}?page={{ page }}">{{ page }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+        <a class="page-link" href="
+        {% if page_obj.has_next %}{% url 'sender:client_list' %}?page={{ page_obj.next_page_number }}{% endif %}">
+        Вперед</a>
+      </li>
+    </ul>
+  </nav>
+  {% endif %}
+{% endblock %}

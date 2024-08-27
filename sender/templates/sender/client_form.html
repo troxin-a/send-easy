@@ -6,20 +6,7 @@
       <h1 class="m-5 text-center">{% if object %}Редактироние клиента{% else %}Новый клиент{% endif %}</h1>
       <form action="" method="post">
         {% csrf_token %}
-        <div class="mb-3">
-          <label for="id-name" class="form-label">Фамилия Имя Отчество</label>
-          <input type="text" class="form-control" id="id-name" placeholder="Иванов Иван Иванович" name="name"
-          value="{{ object.name }}" />
-        </div>
-        <div class="mb-3">
-          <label for="id-email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="id-email" placeholder="ivanov@email.ru" name="email"
-          value="{{ object.email }}" />
-        </div>
-        <div class="mb-3">
-          <label for="id-comment" class="form-label">Комментарий</label>
-          <textarea class="form-control" id="id-comment" rows="5" name="comment">{{ object.comment }}</textarea>
-        </div>
+        {{ form.as_p }}
         <button type="submit" class="btn btn-primary form-control mb-3">{% if object %}Сохранить{% else %}Создать{% endif %}</button>
         <a class="btn btn-secondary form-control"
         href="
@@ -29,6 +16,9 @@
             {% url "sender:client_list" %}
           {% endif %}
         ">Отмена</a>
+        {% for form in formset %}
+          {{ form.as_p }}
+        {% endfor %}
       </form>
     </div>
   </div>

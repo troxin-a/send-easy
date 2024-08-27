@@ -3,9 +3,11 @@
 {% block content %}
   <h1 class="mt-5">Сообщения</h1>
   <p class="lead">Для того, чтобы сообщение было отправлено, необходимо его добавить в рассылку</p>
+  {% if not perms.users.block_user and not perms.sender.disable_mailing %}
   <div class="mb-3">
     <a class="btn btn-primary" href="{% url "sender:text_create" %}">Добавить сообщение</a>
   </div>
+  {% endif %}
   <table class="table table-hover">
     <thead>
       <tr>

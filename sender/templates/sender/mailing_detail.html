@@ -14,9 +14,16 @@
       </div>
 
       <div>
-        <a href="{% url "sender:mailing_update" object.pk %}" class="btn btn-primary">Редактировать</a>
+        {% if perms.sender.disable_mailing %}
+          {% if object.status != object.STOPPED %}
+          <a href="{% url "sender:disable_mailing" object.pk %}" class="btn btn-danger">Завершить</a>
+          {% endif %}
+        {% endif %}
         <a href="{% url "sender:mailing_list" %}" class="btn btn-primary">Назад</a>
+        {% if object.owner == user or user.is_superuser %}
+        <a href="{% url "sender:mailing_update" object.pk %}" class="btn btn-primary">Редактировать</a>
         <a href="{% url "sender:mailing_delete" object.pk %}" class="btn btn-outline-danger">Удалить</a>
+        {% endif %}
       </div>
     </div>
     <div class="card-body">
@@ -36,18 +43,21 @@
           <tbody>
             <tr>
               <td><a href="{% url "sender:text_detail" object.text.pk %}">{{ object.text }}</a></td>
-              {% comment %} <td>{{ object.get_status_display }}</td> {% endcomment %}
-              {% comment %} <td>{{ object.get_periodicity_display }}</td> {% endcomment %}
+              {% if perms.sender.disable_mailing %}
+              <td>{{ object.get_status_display }}</td>
+              <td>{{ object.get_periodicity_display }}</td>
+              {% else %}
               <td><select name="status" class="form-select" id="" onchange="submitForm()">
-                {% for status in object.MAILING_STATUS.items %}
+                {% for status in object.MAILING_STATUS %}
                   <option value="{{ status.0 }}" {% if object.status == status.0 %}selected{% endif %}>{{ status.1 }}</option>
                 {% endfor %}
               </select></td>
               <td><select name="periodicity" class="form-select" id="" onchange="submitForm()">
-                {% for periodicity in object.LAUNCH_FREQUENCY.items %}
+                {% for periodicity in object.LAUNCH_FREQUENCY %}
                   <option value="{{ periodicity.0 }}" {% if object.periodicity == periodicity.0 %}selected{% endif %}>{{ periodicity.1 }}</option>
                 {% endfor %}
               </select></td>
+              {% endif %}
               <td>{{ object.start_datetime }}</td>
               <td>{% if object.end_datetime %}{{ object.end_datetime }}{% else %}-{% endif %}</td>            
             </tr>
@@ -87,18 +97,21 @@
               </table>
               <form action="{% url "sender:attempt_clear" object.pk %}" method="post">
                 {% csrf_token %}
+                {% if not perms.sender.disable_mailing %}
                 <button type="submit" class="btn btn-primary">Очистить попытки</button>
+                {% endif %}
               </form>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="accordion mt-4" id="accordionPanelsStayOpenExample">
+      
+      <div class="accordion mt-4" id="accordionPanelsStayOpenExample">        
         <div class="accordion-item">
           <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
-              Клиенты
+            <button class="accordion-button collapsed" {% if perms.sender.disable_mailing %}disabled{% endif %} type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+              Клиенты: {{ object.clients.all|length }} шт.
             </button>
           </h2>
           <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
@@ -110,7 +123,7 @@
                     <th>Email</th>
                   </tr>
                 </thead>
-              </table>	
+              </table>
               <div class="scroll-table-body">
                 <table class="table table-sm table-hover">
                   <tbody>
@@ -126,7 +139,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>      
     </div>
   </div>
 {% endblock %}

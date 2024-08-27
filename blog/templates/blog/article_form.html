@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col">
+      <h1 class="m-5 text-center">{{ title }}</h1>
+      <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+
+        <div class="row-cols-2">
+          <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary form-control">{% if object %}Сохранить{% else %}Создать{% endif %}</button>
+            <a class="btn btn-secondary form-control"
+            href="
+              {% if object %}
+                {% url "blog:detail" object.pk %}
+              {% else %}
+                {% url "blog:list" %}
+              {% endif %}
+            ">Отмена</a>
+          </div>        
+        </div>        
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,8 +1,68 @@
 {% extends 'base.html' %}
+{% load my_tags %}
 
 {% block content %}
   <h1 class="mt-5">Сервис управления рассылками</h1>
   <p class="lead">
     Чтобы удержать текущих клиентов, часто используют вспомогательные, или «прогревающие», рассылки для информирования и привлечения клиентов.
   </p>
+  <div class="row">
+    <div class="col-4">
+      <div class="card text-center border-primary">
+        <div class="card-header">
+          <h2 class="card-title">Рассылок</h2>
+        </div>
+        <div class="card-body">          
+          <h1 class="card-text">{{ mailings_count }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card text-center border-primary">
+        <div class="card-header">
+          <h2 class="card-title">Активных рассылок</h2>
+        </div>
+        <div class="card-body">          
+          <h1 class="card-text">{{ mailings_count_active }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card text-center border-primary">
+        <div class="card-header">
+          <h2 class="card-title">Клиентов</h2>
+        </div>
+        <div class="card-body">          
+          <h1 class="card-text">{{ clients_count }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row pt-4">
+    <div class="col">
+      {% for object in articles %}
+      <div class="col-md-12">
+        <div class="row g-0 border border-primary rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+          <div class="col p-4 d-flex flex-column position-static">
+            <h3 class="mb-0">{{ object.title }}</h3>
+            {% if object.is_published %}
+              <div class="mb-1 text-body-secondary">{{ object.public_date }}</div>
+            {% else %}
+              <div class="mb-1 text-bg-warning">Не опубликовано</div>
+            {% endif %}                
+            <p class="card-text mb-auto">{{ object.content|truncatechars:300 }}</p>
+            <div class="mb-1 text-body-secondary">Просмотров: {{ object.views_count }}</div>
+            <a href="{% url 'blog:detail' object.pk %}" class="icon-link gap-1 icon-link-hover stretched-link">Продолжить чтение</a>
+          </div>
+          <div class="col-auto d-none d-lg-block">
+            {% if object.preview %}
+              <img height="250" src="{{ object.preview|media_filter }}" class="card-img-top" alt="{{ object.title }}" />
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
 {% endblock %}

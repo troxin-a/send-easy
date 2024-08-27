@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block content %}
+<h1 class="card-title text-center">{{ object.title|capfirst }}</h1>
+  <div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div></div>
+      <div>
+        <a href="{% url 'sender:index' %}" class="btn btn-primary">Назад</a>
+        {% if object.owner == user or perms.blog.change_article %}
+          <a href="{% url 'blog:update' object.pk %}" class="btn btn-primary">Редактировать</a>
+        {% endif %}
+        {% if perms.blog.delete_article or user.is_superuser %}
+          <a href="{% url 'blog:delete' object.pk %}" class="btn btn-outline-danger">Удалить</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card-body">
+      {% if object.preview %}
+        <img src="{{ object.preview|media_filter }}" class="card-img-top" alt="{{ object.title }}" />
+      {% endif %}
+      <p class="lead">{{ object.content|linebreaksbr }}</p>
+      <p class="lead">Дата публикации: {{ object.public_date }}</p>
+      <p class="lead">Просмотров: {{ object.views_count }}</p>
+    </div>
+  </div>
+{% endblock %}

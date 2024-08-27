@@ -1,0 +1,58 @@
+<header>
+  <nav class="navbar navbar-expand-md fixed-top bg-primary" data-bs-theme="dark">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'sender:index' %}">SendEasy</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+        <div>
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">            
+            {% if user.is_authenticated %}
+              {% if not perms.users.view_user and not perms.blog.add_article %}
+              <li class="nav-item">
+                <a class="nav-link {% if '/clients/' in request.path %}active{% endif %}" href="{% url 'sender:client_list' %}">Клиенты</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if '/texts/' in request.path %}active{% endif %}" href="{% url 'sender:text_list' %}">Письма</a>
+              </li>
+              {% endif %}
+            {% if not  perms.blog.add_article %}
+            <li class="nav-item">
+              <a class="nav-link {% if '/mailings/' in request.path %}active{% endif %}" href="{% url 'sender:mailing_list' %}">Рассылки</a>
+            </li>
+            {% endif %}
+            {% endif %}
+            {% if perms.users.view_user or user.is_superuser %}
+            <li class="nav-item">
+              <a class="nav-link {% if '/users/' in request.path %}active{% endif %}" href="{% url 'users:user_list' %}">Пользователи сервиса</a>
+            </li>
+            {% endif %}
+            {% if perms.blog.change_article or user.is_superuser %}
+            <li class="nav-item">
+              <a class="nav-link {% if '/blog/' in request.path %}active{% endif %}" href="{% url 'blog:list' %}">Блог</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+        <div>
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            {% if not user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link {% if '/users/login/' in request.path %}active{% endif %}" href="{% url 'users:login' %}">Вход</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if '/users/register/' in request.path %}active{% endif %}" href="{% url 'users:register' %}">Регистрация</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link {% if '/users/profile/' in request.path %}active{% endif %}" href="{% url 'users:profile' %}">Профиль</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:logout' %}">Выход</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>

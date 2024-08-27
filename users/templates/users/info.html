@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="row mt-4">
+    <div class="col-3"></div>
+    <div class="col-6">
+      <div class="text-center mt-4">
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+        {% if link %}
+        <p><a href="{{ link.link }}">{{ link.caption }}</a></p>
+        {% endif %}        
+      </div>
+    </div>
+  </div>
+{% endblock %}

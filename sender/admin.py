@@ -10,10 +10,10 @@ class MembershipInline(admin.TabularInline):
     extra = 0
 
 
-
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     fields = (
+        "owner",
         "name",
         "email",
         "comment",
@@ -41,9 +41,7 @@ class ClientAdmin(admin.ModelAdmin):
 @admin.register(Text)
 class TextAdmin(admin.ModelAdmin):
 
-    list_display = (
-        "title",
-    )
+    list_display = ("title",)
     search_fields = (
         "title",
         "body",

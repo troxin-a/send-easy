@@ -1,6 +1,8 @@
 from django_ckeditor_5.fields import CKEditor5Field
 from django.db import models
 
+from users.models import User
+
 
 NULLABLE = {"blank": True, "null": True}
 
@@ -9,6 +11,7 @@ class Client(models.Model):
     name = models.CharField(verbose_name="Ф.И.О", max_length=150)
     email = models.EmailField(verbose_name="Email", max_length=150)
     comment = models.TextField(verbose_name="Комментарий", **NULLABLE)
+    owner = models.ForeignKey(to=User, related_name="clients", verbose_name="Владелец", on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f"{self.email} ({self.name})"
@@ -22,6 +25,7 @@ class Client(models.Model):
 class Text(models.Model):
     title = models.CharField(verbose_name="Тема", max_length=150)
     body = CKEditor5Field(verbose_name="Сообщение", **NULLABLE)
+    owner = models.ForeignKey(to=User, related_name="texts", verbose_name="Владелец", on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f"{self.title}"
@@ -37,30 +41,31 @@ class Mailing(models.Model):
     DAY = "D"
     WEEK = "W"
     MONTH = "M"
-    LAUNCH_FREQUENCY = {
-        ONE_TIME: "Одноразовая",
-        DAY: "Раз в день",
-        WEEK: "Раз в неделю",
-        MONTH: "Раз в месяц",
-    }
+    LAUNCH_FREQUENCY = [
+        (ONE_TIME, "Одноразовая"),
+        (DAY, "Раз в день"),
+        (WEEK, "Раз в неделю"),
+        (MONTH, "Раз в месяц"),
+    ]
 
     CREATED = "C"
     RUNING = "R"
     STOPPED = "S"
-    MAILING_STATUS = {
-        CREATED: "Создана",
-        RUNING: "Запущена",
-        STOPPED: "Завершена",
-    }
+    MAILING_STATUS = [
+        (CREATED, "Создана"),
+        (RUNING, "Запущена"),
+        (STOPPED, "Завершена"),
+    ]
 
 
-    name = models.CharField(verbose_name="Наименование", max_length=150, help_text="Введите наименование рассылки", **NULLABLE)
-    start_datetime = models.DateTimeField(verbose_name="Время и дата старта", help_text="Введите время и дату старта")
-    end_datetime = models.DateTimeField(verbose_name="Время и дата окончания", help_text="Введите время и дату окончания (не обязательно)", **NULLABLE)
-    periodicity = models.CharField(verbose_name="Периодичность", max_length=1, choices=LAUNCH_FREQUENCY, default=ONE_TIME, help_text="Выберите периодичность запуска")
-    status = models.CharField(verbose_name="Статус", max_length=1, choices=MAILING_STATUS, default=CREATED, help_text="Выберите статус рассылки")
-    clients = models.ManyToManyField(to=Client, verbose_name="Клиенты",  help_text="Выберите клиентов")
-    text = models.ForeignKey(to=Text, verbose_name="Сообщение", on_delete=models.CASCADE, related_name="mailings", help_text="Выберите сообщение для рассылки")
+    name = models.CharField(verbose_name="Наименование", max_length=150, **NULLABLE)
+    start_datetime = models.DateTimeField(verbose_name="Время и дата старта")
+    end_datetime = models.DateTimeField(verbose_name="Время и дата окончания", **NULLABLE)
+    periodicity = models.CharField(verbose_name="Периодичность", max_length=1, choices=LAUNCH_FREQUENCY, default=ONE_TIME)
+    status = models.CharField(verbose_name="Статус", max_length=1, choices=MAILING_STATUS, default=CREATED)
+    clients = models.ManyToManyField(to=Client, verbose_name="Клиенты")
+    text = models.ForeignKey(to=Text, verbose_name="Сообщение", on_delete=models.CASCADE, related_name="mailings")
+    owner = models.ForeignKey(to=User, related_name="mailings", verbose_name="Владелец", on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f"{self.name}"
@@ -69,6 +74,9 @@ class Mailing(models.Model):
         verbose_name = "рассылку"
         verbose_name_plural = "рассылки"
         ordering = ("pk",)
+        permissions = {
+            ("disable_mailing", "Может отключать рассылку"),
+        }
 
 
 class Attempt(models.Model):
