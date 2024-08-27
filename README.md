@@ -41,7 +41,7 @@
 
 ```bash
 git clone https://github.com/troxin-a/send-easy.git
-cd shop
+cd send-easy
 ```
 
 2. **Активируйте виртуальное окружение:**
