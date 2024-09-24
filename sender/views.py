@@ -254,6 +254,12 @@ class MailingCreateView(
     model = Mailing
     form_class = MailingModelForm
     success_url = reverse_lazy("sender:mailing_list")
+   
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["clients_queryset"] = Client.objects.filter(owner=self.request.user)
+        initial["texts_queryset"] = Text.objects.filter(owner=self.request.user)
+        return initial
 
 
 class MailingUpdateView(
@@ -266,6 +272,12 @@ class MailingUpdateView(
 
     def get_success_url(self):
         return reverse("sender:mailing_detail", args=[self.kwargs.get("pk")])
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["clients_queryset"] = Client.objects.filter(owner=self.request.user)
+        initial["texts_queryset"] = Text.objects.filter(owner=self.request.user)
+        return initial
 
 
 class MailingDeleteView(LoginRequiredMixin, ActionUserPassesTestMixin, DeleteView):
