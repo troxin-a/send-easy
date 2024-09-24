@@ -58,6 +58,11 @@ class MailingModelForm(FormStyleMixin, forms.ModelForm):
         required=False,
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["clients"].queryset = kwargs["initial"]["clients_queryset"]
+        self.fields["text"].queryset = kwargs["initial"]["texts_queryset"]
+
     class Meta:
         model = Mailing
         fields = "__all__"
